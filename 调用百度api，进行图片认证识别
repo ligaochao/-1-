@@ -1,0 +1,30 @@
+from aip import AipOcr
+# 注意，这里的API_KEY，和SECRET_KEY，都是用户的，而不是应用的，对应Access Key ，Secret Key
+APP_ID = '10822785'
+# API_KEY = 'agecvVd5c2UNfLzbN85mA46f'
+# SECRET_KEY = '50FukrQ1I0yINSCqmSuvPYudQxXRwnAQ'
+
+API_KEY = '58e9c83cdca6492cb94a0ca73443ca0d'
+SECRET_KEY = '4228de9cd7444358866483e70a53ea54'
+
+client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
+print(client)
+
+def get_file_content(filePath):
+    with open(filePath, 'rb') as fp:
+        return fp.read()
+
+image = get_file_content('ceshi.png')
+
+""" 如果有可选参数 """
+options = {}
+options["language_type"] = "CHN_ENG"
+options["detect_direction"] = "true"
+options["detect_language"] = "true"
+options["probability"] = "true"
+
+""" 带参数调用通用文字识别, 图片参数为本地图片 """
+print(client.basicGeneral(image, options))
+
+""" 调用通用文字识别, 图片参数为本地图片 """
+# print(client.basicGeneral(image))
