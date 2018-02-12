@@ -1,0 +1,103 @@
+#/usr/bin/env python
+from tkinter import *
+import tkinter  
+from  tkinter  import ttk  
+root = Tk()
+ 
+import hashlib
+import urllib.request 
+import random
+import http.client
+#http://blog.csdn.net/jojoy_tester/article/details/53453888
+# driver.find_element_by_xpath(".//*[@id='su']").click()  xpath常见的写法
+# 可以用来写测试用例，但是要记住一点，有frame 框架的需要做特殊处理
+def regUse():
+	result = e_element.get()
+	e_result.delete(0,END)
+	describe = '#'+str(e_describe.get())
+	strInstructions = ''
+
+	strInstructions = 'driver.find_element_by_'+str(e_mode.get())+'("'+str(e_element.get()) + '")'
+	if str(e_action.get()) == 'click':
+		strInstructions = strInstructions+'.click()'
+	if str(e_action.get()) == 'send_keys':
+		strInstructions = strInstructions+'.send_keys("'+str(e_parameter.get())+'")'
+	if str(e_action.get()) == 'screenshot':
+		strInstructions = 'driver.save_screenshot("'+str(e_parameter.get())+'")'
+	if str(e_action.get()) == 'get':
+		strInstructions = 'driver.get("'+str(e_parameter.get())+'")'
+	print(strInstructions)
+	if len(result)>0:
+		e_result.insert(0,str(strInstructions))
+	try:
+		a=open('model.py', 'a',encoding = 'utf-8')
+		a.write(describe)
+		a.write('\n')
+		a.write(strInstructions)
+		a.write('\n')
+		
+	except Exception as e:
+		raise
+	else:
+		pass
+	finally:
+		a.close()
+		e_element.delete(0,END)
+		e_describe.delete(0,END)
+		e_parameter.delete(0,END)
+		# e_result.delete(0,END)
+		
+
+
+
+l_element =Label(root,text='定位元素：')
+l_element.grid(row=0,sticky=W)
+e_element =Entry(root,width = 10)
+e_element.grid(row=0,column=1,sticky=E)
+
+l_describe =Label(root,text='描述：')
+l_describe.grid(row=0,column=2,sticky=W)
+e_describe =Entry(root,width = 10)
+e_describe.grid(row=0,column=3,sticky=E)
+
+
+
+l_mode =Label(root,text='方式：')
+l_mode.grid(row=1,sticky=W)
+comvalueUse=tkinter.StringVar()#窗体自带的文本，新建一个值  
+e_mode=ttk.Combobox(root,textvariable=comvalueUse,width = 7) #初始化  
+e_mode["values"]=("id","name","xpath","className","tagName","linkText","partialLinkText","cssSelector")  
+e_mode.current(0)  #选择第一个  
+# e_mode.bind("<<ComboboxSelected>>",go)  #绑定事件,(下拉列表框被选中时，绑定go()函数)  
+e_mode.grid(row=1,column=1,sticky=W)
+
+# http://www.51testing.com/html/18/631118-861557.html
+l_action =Label(root,text='动作：')
+l_action.grid(row=2,sticky=W)
+comvalueUse1=tkinter.StringVar()#窗体自带的文本，新建一个值  
+e_action=ttk.Combobox(root,textvariable=comvalueUse1,width = 7) #初始化  
+e_action["values"]=("click","get","send_keys","screenshot")  
+e_action.current(0)  #选择第一个  
+# e_mode.bind("<<ComboboxSelected>>",go)  #绑定事件,(下拉列表框被选中时，绑定go()函数)  
+e_action.grid(row=2,column=1,sticky=W)
+
+
+l_parameter =Label(root,text='参数：')
+l_parameter.grid(row=3,sticky=W)
+e_parameter =Entry(root,width = 10)
+e_parameter.grid(row=3,column=1,sticky=E)
+ 
+# # 第二行，密码标签及输入框
+b_login2 = Button(root,text='生成命令行',command=regUse)
+b_login2.grid(row=4,column=3)
+
+l_result =Label(root,text='结果：')
+l_result.grid(row=5,sticky=W)
+e_result =Entry(root,width = 10)
+e_result.grid(row=5,column=1,sticky=E)
+
+
+
+root.wm_attributes('-topmost',1)
+ 
+root.mainloop()
