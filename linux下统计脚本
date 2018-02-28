@@ -1,0 +1,87 @@
+代码：
+
+
+#!/usr/bin/env python
+#A System Information Gathering Script
+import subprocess
+
+try:
+	f= open('config.txt','r+')
+	list1 =f.readlines()
+	# print(list1)
+	for i in range(0,len(list1)):
+		list1[i] =list1[i].strip('\n')
+		logCotentsLine = list1[i].find('logCotents')
+		orderMapLine = list1[i].find('orderMap')
+		# print(logCotentsLine)
+
+		if logCotentsLine>-1:
+			start = list1[i].find('"')
+			end = list1[i].find('"',start+1)
+			logCotents = list1[i][start+1:end]
+			print(logCotents)
+		if orderMapLine>-1:
+			start = list1[i].find('"')
+			end = list1[i].find('"',start+1)
+			orderMap = list1[i][start+1:end]
+			print(orderMap)
+finally:
+	if f:
+		f.close()
+
+
+
+
+# command1  = 'cd  /opt/zhj/clickTotal ; rm -rf  total.log ;'
+
+command2  = 'cd /opt/smb/zschlogs/nginx_access_logs ;'
+command3  = 'rm -rf  total.log ;'
+command5 = 'cp  total.log   /opt/zhj/clickTotal/total.log ;'
+
+
+commands = command2 + command3
+subprocess.call(commands, shell=True)
+
+logCotents = logCotents.split(';')
+for obj in logCotents:
+	if len(obj)>0:
+		try:
+			# print(obj)
+			# command4 = " grep 'http://m.sichuanair.com/zschresource/admanage/ad/1137/chengdu_hongkong.html?time=1509588499090' web*_nginx_access_bak."+obj+" |grep 'list_img_03.jpg' |wc -l >> total.log;"
+			# command4 = " grep '/client_init_setings.htm?actionType=CLIENT_INIT_SETINGS&platformID=0&appVersion=5.1.0&channelID=bseo' web*_nginx_access_bak."+obj+" |wc -l >> total.log;"
+			command4 = orderMap.replace('????',obj)
+			print(command4)
+			commands = command2 + command4 + command5
+			subprocess.call(commands, shell=True)
+		except Exception as e:
+			print(e)
+
+
+commands = command2 + command3
+subprocess.call(commands, shell=True)
+total = 0
+try:
+	f= open('total.log','r+')
+	list2 =f.readlines()
+	print(list2)
+	# print(list1)
+	for i in range(0,len(list2)):
+		if len(str(i))>0:
+			print(i)
+			total= total + int(list2[i])
+	print(total)
+	f.write('\n')
+	f.write(str(total))
+finally:
+	if f:
+		f.close()
+
+
+
+配置文件：
+
+#统计日期
+logCotents="2018-02-02;2018-02-03;2018-02-04;2018-02-05;2018-02-06;2018-02-07;2018-02-08;2018-02-09;2018-02-10;2018-02-11;2018-02-12;2018-02-13;2018-02-14;2018-02-15;2018-02-16;2018-02-17;2018-02-18;2018-02-19;2018-02-20;2018-02-21;2018-02-22;2018-02-23;2018-02-24;2018-02-25;2018-02-26;2018-02-27;"
+#查询指令集
+orderMap = "grep '/client_init_setings.htm?actionType=CLIENT_INIT_SETINGS&platformID=0&appVersion=5.1.0&channelID=bseo' web*_nginx_access_bak.???? |wc -l >> total.log;"
+
